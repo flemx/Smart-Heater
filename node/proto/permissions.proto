@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.permissions";
+option java_outer_classname = "PermissionServiceImpl";
+
+package permissions;
+service PermissionService {
+  //simple unary rpc 
+  rpc authorise(UserCredentialsMessage) returns (AuthoriseMessage) {}
+  rpc getUser(UserId) returns (UserInfoMessage) {}
+  rpc getEmails(stream UserId) returns (stream EmailUser) {}
+  rpc GetRegistered(stream UserCredentialsMessage) returns ( NumUsers) {}
+ 
+}
+message UserCredentialsMessage {
+  string user = 1;
+  string pwd = 2; 
+}
+
+message NumUsers {
+    int32 num = 1;
+  }
+
+message UserId {
+    string user = 1;
+  }
+
+  message EmailUser {
+    string user = 1;
+    string email = 2;
+  }
+  
+
+message AuthoriseMessage {
+  bool isAuthorised = 1;
+  string details = 2;
+}
+
+message UserRoleMessage {
+  string role = 1;  
+}
+
+message UserInfoMessage {
+ 	string name = 1;
+  	int32 tel = 2;
+  	string email = 3;
+}
+message UserEntry{
+	UserCredentialsMessage credentials = 1;
+	UserRoleMessage role = 2;
+	UserInfoMessage info = 3;
+}
