@@ -1,0 +1,42 @@
+[
+    {
+      "user": "tom",
+      "password": "tomXX",
+      "role": "admin",
+      "infoName": "Tom Holls",
+      "infoTel": "0908956300",
+      "infoEmail": "tom@example.com"
+    },
+    {
+      "user": "adam",
+      "password": "adamXX",
+      "role": "manager",
+      "infoName": "Adam Higins",
+      "infoTel": "0904552200",
+      "infoEmail": "adam@example.com"
+    },
+    {
+      "user": "paul",
+      "password": "paulXX",
+      "role": "user",
+      "infoName": "Paul Smith",
+      "infoTel": "0908754200",
+      "infoEmail": "paul@example.com"
+    },
+    {
+      "user": "ann",
+      "password": "annXX",
+      "role": "user",
+      "infoName": "Ann Peterson",
+      "infoTel": "0914340400",
+      "infoEmail": "ann@example.com"
+    },
+    {
+      "user": "conor",
+      "password": "conorXX",
+      "role": "user",
+      "infoName": "Connor Lynch",
+      "infoTel": "0954890700",
+      "infoEmail": "conor@example.com"
+    }
+  ]
