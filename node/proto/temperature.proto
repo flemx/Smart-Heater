@@ -3,14 +3,18 @@ syntax = "proto3";
 package temperature;
 service TemperatureService {
 
-rpc getTemp(temp) returns (stream temp) {}
-rpc setTemp(temp) returns (confirm) {}
+rpc getTemp(stream streamTemp) returns (stream temp) {}
+rpc setTemp(temp) returns (setConfirmed) {}
  
 }
 message temp {
   int64 tempVal = 1;
 }
 
-message confirm {
+message streamTemp {
+    bool enabled = 1;
+}
+
+message setConfirmed {
     bool confirmed = 1;
   }

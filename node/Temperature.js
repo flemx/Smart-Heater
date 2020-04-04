@@ -12,7 +12,7 @@ const SuperServer = require('./SuperServer');
 class Temperature extends SuperServer{
 
     /**
-     * Constructor to initialise grps service
+     * Constructor to start grps service from parent class and set variables
      * @param {*} grpc 
      * @param {*} protoLoader 
      * @param {*} packageName 
@@ -31,28 +31,58 @@ class Temperature extends SuperServer{
             getTemp : this.getTemp,
             setTemp : this.setTemp
         };
+        this.streamEnabled = false;
+
+        // Sets the current room Temperature, default is 20.2
+        this.roomTemp = 20.2;
       }
 
-      getTemp(){
-        call.on('data', function(user) {
-            console.log('Request to find email for:', user)
-            for(let usr of userDB){
-                if(user.user === usr.user){
-                    call.write({
-                        user: usr.user,
-                        email : usr.infoEmail,
-                    });
-                }
-            }
+
+    getTemp(call){
+        call.on('data', function(streamTemp) {
+            this.streamEnabled = streamTemp.enabled;
+            this.streamEnabled ?  this.tempGenerator(call) : null;
         });
-        call.on('end', function() {
+       call.on('end', function() {
             call.end();
-          });
-      }
+        });
+    }
 
-      setTemp(){
 
-      }
+    /**
+     * Recursive method to write back the room temperature and adds random ratio
+     * Purpose is to simulate slighty fluctuating temperature 
+     * @param {*} call 
+     */
+    tempGenerator(call){
+        // Stop recursive method if this.streamEnabled is set to false 
+        if(this.streamEnabled){
+            // generate random number between defined ratio of this.roomTemp
+            let precision = 10; // 1 decimal
+            let ratio = 0.8;
+            let randomTemp = Math.floor(
+                Math.random() * (
+                    this.roomTemp + ratio * precision - this.roomTemp - ratio * precision
+                ) + 1 * precision) / (1*precision);
+            
+            // write back the newly generated temperature value back to client
+            call.write({
+                tempVal: randomTemp
+            });
+            // Call the method again with time delay
+            setTimeout(function() {
+                //your code to be executed after 1 second
+                this.tempGenerator(call);
+            }, 1500);
+           
+        }
+
+    }
+      
+
+    setTemp(){
+
+    }
 
 }
 
