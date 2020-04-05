@@ -6,30 +6,27 @@
  */
 
 // Import parent class
-const SuperServer = require('./SuperServer');
+const {SuperServer} = require('./SuperClasses');
 
+const baseTemp = 20.2;
+let roomTemp = baseTemp;
 
 class Temperature extends SuperServer{
 
     /**
-     * Constructor to start grps service from parent class and set variables
-     * @param {*} grpc 
-     * @param {*} protoLoader 
-     * @param {*} packageName 
-     * @param {*} servicename 
-     * @param {*} ipAddress 
-     * @param {*} portNum 
+     * Constructor to start grps service from parent class and set class properties
      */
-    constructor(grpc, protoLoader, packageName, servicename, ipAddress, portNum) {
+    constructor(grpc, protoLoader, conInfo) {
+        console.log('conInfo', conInfo);
         super(
-            grpc, protoLoader,packageName,
-            servicename, ipAddress,portNum,
+            grpc, protoLoader,'temperature',
+            'TemperatureService', conInfo.host,conInfo.TemperaturePort,
             );
         
         // Set method handles to define functions in proto upon starting the server
         this.methodHandlers = {
             getTemp : this.getTemp,
-            setTemp : this.setTemp
+            setTemp : this.setTemp,
         };
         this.streamEnabled = false;
 
@@ -37,53 +34,57 @@ class Temperature extends SuperServer{
         this.roomTemp = 20.2;
       }
 
-
-    getTemp(call){
-        call.on('data', function(streamTemp) {
-            this.streamEnabled = streamTemp.enabled;
-            this.streamEnabled ?  this.tempGenerator(call) : null;
-        });
-       call.on('end', function() {
-            call.end();
-        });
+    /**
+     * setTemp function to set the current room temperature
+     * @param {*} call 
+     * @param {*} callback 
+     */
+    setTemp(call, callback){
+        let setConfirmed = {
+            confirmed : false,
+            error : null
+        };
+        try{
+            console.log('Setting temperature to : ' + call.request.tempVal);
+            roomTemp = call.request.tempVal;
+            console.log('Check room temp: ' + roomTemp);
+            setConfirmed.confirmed = true;
+        }catch(e){
+            console.error('Error executing setTemp()', e.message);
+            setConfirmed.error =  e.message;
+        }
+        callback(null, setConfirmed);
+        
     }
 
 
     /**
-     * Recursive method to write back the room temperature and adds random ratio
-     * Purpose is to simulate slighty fluctuating temperature 
+     * Return the room temperature
+     * Purpose is to simulate slighty fluctuating temperature by adding small random decimal
      * @param {*} call 
      */
-    tempGenerator(call){
-        // Stop recursive method if this.streamEnabled is set to false 
-        if(this.streamEnabled){
-            // generate random number between defined ratio of this.roomTemp
-            let precision = 10; // 1 decimal
-            let ratio = 0.8;
-            let randomTemp = Math.floor(
-                Math.random() * (
-                    this.roomTemp + ratio * precision - this.roomTemp - ratio * precision
-                ) + 1 * precision) / (1*precision);
-            
-            // write back the newly generated temperature value back to client
-            call.write({
-                tempVal: randomTemp
+    getTemp(call, callback){
+        console.log('execute getTemp()');
+        try{
+            if(call.request.enabled){
+                let ramTemp = ( roomTemp + Math.random() * (0.8 - 0.4 + 0.4) + 0.1).toFixed(2);
+                console.log(ramTemp);
+                callback(null, {
+                    tempVal: ramTemp,
+                    error : null
+                });
+            }
+        }catch(e){
+            console.error('Error detected in getTemp(): ', e.message);
+            callback(null, {
+                tempVal: 0,
+                error : e.message
             });
-            // Call the method again with time delay
-            setTimeout(function() {
-                //your code to be executed after 1 second
-                this.tempGenerator(call);
-            }, 1500);
-           
         }
-
     }
-      
 
-    setTemp(){
-
-    }
 
 }
+
 
 module.exports = Temperature;

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package controller;
+service ControllerService {
+
+rpc getTempStream(stream streamTemp) returns (stream temp) {}
+ 
+}
+message temp {
+    double tempVal = 1;
+    string error = 2;
+}
+
+message streamTemp {
+    bool enabled = 1;
+}
+

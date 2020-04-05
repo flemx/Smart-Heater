@@ -102,20 +102,7 @@ class SmartDashboardState extends State<SmartDashboard> {
             textStyle:
                 const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
         axes: <RadialAxis>[
-          RadialAxis(minimum: 0, maximum: 50, ranges: <GaugeRange>[
-            GaugeRange(
-                startValue: 0,
-                endValue: _maxTempValue ,
-                color: Colors.green,
-                startWidth: 10,
-                endWidth: 10),
-            GaugeRange(
-                startValue: _maxTempValue,
-                endValue: 50,
-                color: Colors.red,
-                startWidth: 10,
-                endWidth: 10)
-          ], pointers: <GaugePointer>[
+          RadialAxis(minimum: 0, maximum: 50, pointers: <GaugePointer>[
             NeedlePointer(value: tempVal, enableAnimation: true),
           ], annotations: <GaugeAnnotation>[
             GaugeAnnotation(
