@@ -10,8 +10,8 @@ const protoLoader = require('@grpc/proto-loader');
 
 
 // Import Classes
-const Temperature = require('./Temperature');
-const Controller = require('./Controller');
+const Temperature = require('./gRPC_Servers/Temperature');
+const Controller = require('./gRPC_Servers/Controller');
 
 
 // host and port details used for servers and clients

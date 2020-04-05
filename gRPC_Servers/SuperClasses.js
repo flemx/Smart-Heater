@@ -30,7 +30,7 @@ class SuperGrpc{
     this.ipAddress = ipAddress;
     this.portNum = portNum;
 
-    this.PROTO_PATH = __dirname + `/proto/${this.packageName}.proto`;
+    this.PROTO_PATH = __dirname + `/../proto/${this.packageName}.proto`;
     this.packageDefinition = this.protoLoader.loadSync(
         this.PROTO_PATH,
         {keepCase: true,
