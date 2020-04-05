@@ -12,15 +12,20 @@ const protoLoader = require('@grpc/proto-loader');
 // Import Classes
 const Temperature = require('./gRPC_Servers/Temperature');
 const Controller = require('./gRPC_Servers/Controller');
-
+const Authentication = require('./gRPC_Servers/Authentication');
 
 // host and port details used for servers and clients
 const conInfo = {
     host: 'localhost',
     TemperaturePort : '50051',
-    ControllerPort : '50052'
+    ControllerPort : '50052',
+    AuthenticationPort : '50053'
 }
 
+
+/**
+ *  Start all the gRPC servers 
+ */
 function main() {
   const tempServer = new Temperature(
       grpc, 
@@ -35,6 +40,13 @@ function main() {
     conInfo
     );
     controllerpServer.startServer();
+
+  const authenticationServer = new Authentication(
+    grpc, 
+    protoLoader,
+    conInfo
+    );
+    authenticationServer.startServer();
 }
   
   main();

@@ -17,7 +17,6 @@ class Temperature extends SuperServer{
      * Constructor to start grps service from parent class and set class properties
      */
     constructor(grpc, protoLoader, conInfo) {
-        console.log('conInfo', conInfo);
         super(
             grpc, protoLoader,'temperature',
             'TemperatureService', conInfo.host,conInfo.TemperaturePort,

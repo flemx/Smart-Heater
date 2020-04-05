@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package authentication;
+service AuthenticationService {
+  rpc authorise(userInfo) returns (confirmAuth) {}
+ 
+}
+message userInfo {
+  string user = 1;
+  string pwd = 2;
+}
+
+
+message confirmAuth {
+  bool isAuthorised = 1;
+  string details = 2;
+}
+
